@@ -1,0 +1,15 @@
+{% extends "admin_navbar.html" %}
+
+{% block title %}Dashboard - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <h1>Face Detection Control</h1>
+    {% if session.get('face_detection') %}
+      <a href="/stop-face-detection" class="btn btn-warning">Turn Off Face Detection</a>
+    {% else %}
+      <a href="/detect" class="btn btn-success">Turn On Face Detection</a>
+    {% endif %}
+  </div>  
+   
+{% endblock %}
