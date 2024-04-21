@@ -2,16 +2,17 @@
 from datetime import datetime, timedelta
 
 from .models import Student, User, Course,Attendance
-def check_and_create_attendance(user_id,db):
+
+def check_and_create_attendance(user_id, db):
     # Get the current time
     now = datetime.utcnow()
-    # Calculate 24 hours ago
-    twenty_four_hours_ago = now - timedelta(days=1)
+    # Calculate 1 hour ago
+    one_hour_ago = now - timedelta(hours=1)
 
-    # Check if an attendance record exists for the user in the last 24 hours
+    # Check if an attendance record exists for the user in the last hour
     attendance_record = Attendance.query.filter(
         Attendance.user_id == user_id,
-        Attendance.timestamp >= twenty_four_hours_ago
+        Attendance.timestamp >= one_hour_ago
     ).first()
 
     # If no record exists, create one
@@ -19,11 +20,12 @@ def check_and_create_attendance(user_id,db):
         new_attendance = Attendance(user_id=user_id, timestamp=now, status='Present')
         db.session.add(new_attendance)
         db.session.commit()
-        return f"Marked Present",True
-     
+        return "Marked Present", True
+
     else:
-        # print(f"Attendance record already exists for user_id {user_id} in the last 24 hours.")
-        return f"You have already been marked present in the last 24 hours.",False
+        # If an attendance record exists within the last hour, notify the user
+        return "You have already been marked present in the last hour.", False
+
 def get_student_details(user_id):
     student = Student.query.filter_by(user_id=user_id).first()
     if student:
